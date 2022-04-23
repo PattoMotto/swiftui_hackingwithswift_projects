@@ -18,9 +18,11 @@ struct ContentView: View {
         ZStack {
             LinearGradient(colors: [.pink, .blue], startPoint: .center, endPoint: .bottom).ignoresSafeArea()
             VStack {
+                Spacer()
                 Text("Guess the Flag")
                     .font(.largeTitle.weight(.bold))
                     .foregroundColor(.primary)
+                Spacer()
                 Spacer()
                 VStack {
                     Text("Tap the flag of")
