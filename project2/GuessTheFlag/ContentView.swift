@@ -91,7 +91,7 @@ struct ContentView: View {
     }
 
     func handleResetGame() {
-        turnCount = 0
+        turnCount = 1
         score = 0
         askQuestion()
     }
