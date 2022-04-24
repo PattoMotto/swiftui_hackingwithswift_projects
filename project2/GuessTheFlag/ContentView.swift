@@ -13,6 +13,11 @@ struct ContentView: View {
     @State private var showingScore = false
     @State private var scoreTitle = ""
     @State private var score = 0
+    @State private var turnCount = 1
+    @State private var showingSummary = false
+    @State private var summaryTitle = ""
+
+    private let maximumTurn = 8
 
     var body: some View {
         ZStack {
@@ -39,10 +44,7 @@ struct ContentView: View {
                             Button {
                                 flagDidTap(number)
                             } label: {
-                                Image(countries[number])
-                                    .renderingMode(.original)
-                                    .cornerRadius(16)
-                                    .shadow(radius: 5)
+                                FlagImage(name: countries[number])
                             }
                         }
                     }
@@ -58,17 +60,29 @@ struct ContentView: View {
                 Spacer()
             }.padding()
         }.alert(scoreTitle, isPresented: $showingScore) {
-            Button("Continue", action: askQuestion)
+            Button("Continue", action: handleNextGame)
         } message: {
             Text("Your score is \(score)")
+        }.alert(summaryTitle, isPresented: $showingSummary) {
+            Button("Restart", action: handleResetGame)
         }
     }
 
     func flagDidTap(_ answer: Int) {
         let isCorrect = correctAnswer == answer
-        scoreTitle = isCorrect ? "Correct" : "Wrong"
+        scoreTitle = isCorrect ? "Correct" : "Wrong! That’s the flag of \(countries[answer])"
         score += isCorrect ? 1 : 0
         showingScore = true
+        turnCount += 1
+    }
+
+    func handleNextGame() {
+        if turnCount > maximumTurn {
+            summaryTitle = "Game over!\n Your score is \(score) of \(maximumTurn)"
+            showingSummary = true
+        } else {
+            askQuestion()
+        }
     }
 
     func askQuestion() {
@@ -76,6 +90,11 @@ struct ContentView: View {
         correctAnswer = Int.random(in: 0...2)
     }
 
+    func handleResetGame() {
+        turnCount = 0
+        score = 0
+        askQuestion()
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
