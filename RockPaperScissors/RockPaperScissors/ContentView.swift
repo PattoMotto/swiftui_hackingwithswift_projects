@@ -25,7 +25,7 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            AngularGradient(gradient: gradient, center: .center, angle: .degrees(90)).ignoresSafeArea()
+            AngularGradient(gradient: gradient, center: .center, angle: .degrees(0)).ignoresSafeArea()
             VStack {
                 Spacer()
                 Text("Choose wisely")
@@ -52,6 +52,7 @@ struct ContentView: View {
                         Text("Score: \(score)")
                         Text("Bot move: \(ContentView.options[botMove])")
                         Text("You \(isWinning ? "WIN" : "LOSE")")
+                            .font(.largeTitle.weight(.semibold))
                     }.foregroundColor(.secondary)
                         .font(.headline.weight(.bold))
                 }

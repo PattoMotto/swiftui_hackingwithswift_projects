@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var turnCount = 1
     @State private var showingSummary = false
     @State private var summaryTitle = ""
+    @State private var selectingFlagIndex = -1
 
     private let maximumTurn = 8
 
@@ -46,6 +47,9 @@ struct ContentView: View {
                             } label: {
                                 FlagImage(name: countries[number])
                             }
+                            .rotation3DEffect(.degrees(selectingFlagIndex == number ? 360 : 0), axis: (x: 0, y: 1, z: 0))
+                            .opacity(unselectedFlag(number) ? 0.25 : 1)
+                            .scaleEffect(unselectedFlag(number) ? 0.5 : 1)
                         }
                     }
                 }.frame(maxWidth: .infinity)
@@ -68,8 +72,15 @@ struct ContentView: View {
         }
     }
 
+    private func unselectedFlag(_ index: Int) -> Bool {
+        selectingFlagIndex >= 0 && selectingFlagIndex != index
+    }
+
     func flagDidTap(_ answer: Int) {
         let isCorrect = correctAnswer == answer
+        withAnimation {
+            selectingFlagIndex = answer
+        }
         scoreTitle = isCorrect ? "Correct" : "Wrong! That’s the flag of \(countries[answer])"
         score += isCorrect ? 1 : 0
         showingScore = true
@@ -77,6 +88,9 @@ struct ContentView: View {
     }
 
     func handleNextGame() {
+        withAnimation {
+            selectingFlagIndex = -1
+        }
         if turnCount > maximumTurn {
             summaryTitle = "Game over!\n Your score is \(score) of \(maximumTurn)"
             showingSummary = true
